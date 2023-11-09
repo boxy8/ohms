@@ -29,13 +29,11 @@ const Canvas = () => {
     },[]);
 
     return (
-        <div>
-            <canvas
-                ref={canvasRef}
-                width={canvasSize}
-                height={canvasSize}
-            />
-        </div>
+        <canvas
+            ref={canvasRef}
+            width={canvasSize}
+            height={canvasSize}
+        />
     );
 
 };
