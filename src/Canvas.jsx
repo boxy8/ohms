@@ -1,4 +1,5 @@
-import { useRef, useEffect } from 'react'
+import { useRef, useState, useEffect } from 'react'
+import styles from './Canvas.module.css';
 
 const Canvas = () => {
     const canvasSize = 1420;
@@ -7,6 +8,7 @@ const Canvas = () => {
     const dotDiam = 7;
 
     const canvasRef = useRef(null);
+    const [isDrawing, setIsDrawing] = useState(false);
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -28,11 +30,54 @@ const Canvas = () => {
 
     },[]);
 
+    const fillNearestDot = (x, y) => {
+        const ctx = canvasRef.current.getContext('2d');
+
+        const rect = canvasRef.current.getBoundingClientRect();
+        const scaleX = canvasRef.current.width / rect.width;
+        const scaleY = canvasRef.current.height / rect.height;
+    
+        // for some reason the x doesn't need offsetting
+        const scaledX = x * scaleX;
+        console.log(rect.left);
+        const scaledY = (y - rect.top) * scaleY;
+
+        // off by around 5 pixels for some reason
+        const roundedX = Math.round(scaledX / blockSize) * blockSize-5;
+        const roundedY = Math.round(scaledY / blockSize) * blockSize-5;
+
+        ctx.strokeStyle = 'black';
+        ctx.beginPath();
+        ctx.arc(roundedX + blockSize / 2, roundedY + blockSize / 2, dotDiam / 2, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgb(32, 32, 32)';
+        ctx.stroke();
+        ctx.fill();
+    }
+
+    const startDrawing = (e) => {
+        fillNearestDot(e.nativeEvent.offsetX, e.nativeEvent.offsetY)
+        setIsDrawing(true);
+    };
+
+    const draw = (e) => {
+        if (!isDrawing) return;
+        fillNearestDot(e.nativeEvent.offsetX, e.nativeEvent.offsetY)
+    };
+
+    const stopDrawing = () => {
+        setIsDrawing(false);
+    };
+
     return (
         <canvas
+            className={styles.canvas}
             ref={canvasRef}
             width={canvasSize}
             height={canvasSize}
+            onMouseDown={startDrawing}
+            onMouseMove={draw}
+            onMouseUp={stopDrawing}
+            onMouseOut={stopDrawing}
         />
     );
 
