@@ -22,7 +22,7 @@ const Canvas = () => {
         // draw dots
         ctx.fillStyle = 'white';
         for (let x = borderSize; x < canvas.width - borderSize; x += blockSize) {
-            for (let y = borderSize; y < canvas.width - borderSize; y += blockSize) {
+            for (let y = borderSize; y < canvas.height - borderSize; y += blockSize) {
                 ctx.beginPath();
                 ctx.arc(x + blockSize / 2, y + blockSize / 2, dotDiam / 2, 0, Math.PI * 2);
                 ctx.fill();
@@ -32,7 +32,8 @@ const Canvas = () => {
     },[]);
 
     const fillNearestDot = (x, y) => {
-        const ctx = canvasRef.current.getContext('2d');
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext('2d');
 
         const rect = canvasRef.current.getBoundingClientRect();
         const scaleX = canvasRef.current.width / rect.width;
@@ -45,6 +46,10 @@ const Canvas = () => {
         // off by 5 pixels for some reason
         const roundedX = Math.round(scaledX / blockSize) * blockSize-5;
         const roundedY = Math.round(scaledY / blockSize) * blockSize-5;
+
+        if (roundedX < borderSize || roundedY < borderSize || roundedX >= canvas.width - borderSize || roundedY >= canvas.height - borderSize) {
+            return;
+        }
 
         ctx.strokeStyle = 'black';
         ctx.beginPath();
