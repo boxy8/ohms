@@ -2,6 +2,7 @@ import { useRef, useState, useEffect } from 'react'
 import styles from './Canvas.module.css';
 
 const Canvas = () => {
+    // 114 x 114 dots
     const canvasSize = 1420;
     const borderSize = 83;
     const blockSize = 11;
@@ -39,10 +40,9 @@ const Canvas = () => {
     
         // for some reason the x doesn't need offsetting
         const scaledX = x * scaleX;
-        console.log(rect.left);
         const scaledY = (y - rect.top) * scaleY;
 
-        // off by around 5 pixels for some reason
+        // off by 5 pixels for some reason
         const roundedX = Math.round(scaledX / blockSize) * blockSize-5;
         const roundedY = Math.round(scaledY / blockSize) * blockSize-5;
 
@@ -52,7 +52,7 @@ const Canvas = () => {
         ctx.fillStyle = 'rgb(32, 32, 32)';
         ctx.stroke();
         ctx.fill();
-    }
+    };
 
     const startDrawing = (e) => {
         fillNearestDot(e.nativeEvent.offsetX, e.nativeEvent.offsetY)
