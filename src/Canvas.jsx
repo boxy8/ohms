@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect } from 'react'
 import styles from './Canvas.module.css';
+import { ohmsData } from './ohmsData';
 
 const Canvas = () => {
     // 114 x 114 dots
@@ -22,13 +23,32 @@ const Canvas = () => {
         // draw dots
         ctx.fillStyle = 'white';
         for (let x = borderSize; x < canvas.width - borderSize; x += blockSize) {
-            for (let y = borderSize; y < canvas.height - borderSize; y += blockSize) {
+            for (let y = borderSize; y < canvas.height - borderSize; y += blockSize) { 
                 ctx.beginPath();
                 ctx.arc(x + blockSize / 2, y + blockSize / 2, dotDiam / 2, 0, Math.PI * 2);
                 ctx.fill();
             }
         }
 
+        ctx.strokeStyle = 'black';
+        ctx.fillStyle = 'rgb(32, 32, 32)';
+        ctx.lineWidth = 2;
+        let row = 0
+        let col = 0
+        for (let x = borderSize; x < canvas.width - borderSize; x += blockSize) {
+            for (let y = borderSize; y < canvas.height - borderSize; y += blockSize) {
+                row = (y - borderSize) / blockSize;
+                col = (x - borderSize) / blockSize;
+                if (ohmsData[row][col] == 1) {    
+                    ctx.beginPath();
+                    ctx.arc(x + blockSize / 2, y + blockSize / 2, dotDiam / 2, 0, Math.PI * 2);
+                    ctx.stroke();
+                    ctx.fill();
+                }
+                col += 1;
+            }
+            row += 1;
+        }
     },[]);
 
     const fillNearestDot = (x, y) => {
