@@ -1,18 +1,28 @@
-import { useRef, useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import styles from './Canvas.module.css';
 import { ohmsData } from './ohmsData';
 
-const Canvas = () => {
+const Canvas = ({ canvasRef, isErase, isDrawDefault, setIsDrawDefault }) => {
     // 114 x 114 dots
     const canvasSize = 1420;
     const borderSize = 83;
     const blockSize = 11;
     const dotDiam = 7;
 
-    const canvasRef = useRef(null);
     const [isDrawing, setIsDrawing] = useState(false);
 
     useEffect(() => {
+        drawEmptyCanvas();
+    }, [canvasRef]);
+
+    useEffect(() => {
+        if (isDrawDefault) {
+            drawOhms();
+            setIsDrawDefault(false);
+        }
+    }, [isDrawDefault])
+
+    const drawEmptyCanvas = () => {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
 
@@ -29,7 +39,11 @@ const Canvas = () => {
                 ctx.fill();
             }
         }
+    }
 
+    const drawOhms = () => {
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext('2d');
         ctx.strokeStyle = 'black';
         ctx.fillStyle = 'rgb(32, 32, 32)';
         ctx.lineWidth = 2;
@@ -39,7 +53,7 @@ const Canvas = () => {
             for (let y = borderSize; y < canvas.height - borderSize; y += blockSize) {
                 row = (y - borderSize) / blockSize;
                 col = (x - borderSize) / blockSize;
-                if (ohmsData[row][col] == 1) {    
+                if (ohmsData[row][col] === 1) {    
                     ctx.beginPath();
                     ctx.arc(x + blockSize / 2, y + blockSize / 2, dotDiam / 2, 0, Math.PI * 2);
                     ctx.stroke();
@@ -49,7 +63,7 @@ const Canvas = () => {
             }
             row += 1;
         }
-    },[]);
+    }
 
     const fillNearestDot = (x, y) => {
         const canvas = canvasRef.current;
@@ -74,7 +88,7 @@ const Canvas = () => {
         ctx.strokeStyle = 'black';
         ctx.beginPath();
         ctx.arc(roundedX + blockSize / 2, roundedY + blockSize / 2, dotDiam / 2, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgb(32, 32, 32)';
+        ctx.fillStyle = isErase ? 'white' : 'rgb(32, 32, 32)';
         ctx.stroke();
         ctx.fill();
     };
