@@ -10,6 +10,15 @@ button {
 }
 
 button:hover {
+    color: white !important;
+}
+
+.unsupported {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
     color: white;
 }
 

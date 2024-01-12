@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import Canvas from './Canvas';
 import styles from './DrawingApp.module.css'
 
@@ -7,6 +7,15 @@ const DrawingApp = () => {
     const [isErase, setIsErase] = useState(false);
     const [isDrawDefault, setIsDrawDefault] = useState(false);
     const [hasDrawnDefault, setHasDrawnDefault] = useState(false);
+    const [isTouchDevice, setIsTouchDevice] = useState(false);
+
+    useEffect(() => {
+        setIsTouchDevice(
+            'ontouchstart' in window 
+            || navigator.maxTouchPoints > 0 
+            || navigator.msMaxTouchPoints > 0
+        );
+      }, []);
 
     const handleDownload = () => {
         const dataUrl = canvasRef.current.toDataURL('image/png');
@@ -18,50 +27,61 @@ const DrawingApp = () => {
         document.body.removeChild(link);
     };
 
-    return (
-        <div className={styles.container}>
-            <button 
-                className={styles.ohmsButton}
-                onClick={() => {
-                    setIsDrawDefault(true);
-                    setHasDrawnDefault(true);
-                }}
-                style={{
-                    color: hasDrawnDefault ? 'white' : '#b2b2b2'
-                }}
-            >
-                _Ohms
-            </button>
-            <div className={styles.canvasContainer}>
-                <Canvas
-                    canvasRef={canvasRef}
-                    isErase={isErase}
-                    isDrawDefault={isDrawDefault}
-                    setIsDrawDefault={setIsDrawDefault}
-                />
-                <div className={styles.toolButtons}>
+    if (isTouchDevice) {
+        return (
+            <div className={styles.unsupported}>
+                <h1>Not Supported</h1>
+                <p>Sorry, _Ohms does not currently support touch devices.</p>
+                <br></br>
+                <button onClick={() => setIsTouchDevice(false)}>_Enter</button>
+            </div>
+        );
+    } else {
+        return (
+            <div className={styles.container}>
                 <button 
-                    onClick={() => setIsErase(false)}
+                    className={styles.ohmsButton}
+                    onClick={() => {
+                        setIsDrawDefault(true);
+                        setHasDrawnDefault(true);
+                    }}
                     style={{
-                        color: isErase ? '#b2b2b2' : 'white'
+                        color: hasDrawnDefault ? 'white' : '#b2b2b2'
                     }}
                 >
-                    _Draw
+                    _Ohms
                 </button>
-                <button 
-                    onClick={() => setIsErase(true)}
-                    style={{
-                        color: isErase ? 'white' : '#b2b2b2'
-                    }}
-                >
-                    _Erase
-                </button>
-                <button onClick={handleDownload}>_Save</button>
+                <div className={styles.canvasContainer}>
+                    <Canvas
+                        canvasRef={canvasRef}
+                        isErase={isErase}
+                        isDrawDefault={isDrawDefault}
+                        setIsDrawDefault={setIsDrawDefault}
+                    />
+                    <div className={styles.toolButtons}>
+                    <button 
+                        onClick={() => setIsErase(false)}
+                        style={{
+                            color: isErase ? '#b2b2b2' : 'white'
+                        }}
+                    >
+                        _Draw
+                    </button>
+                    <button 
+                        onClick={() => setIsErase(true)}
+                        style={{
+                            color: isErase ? 'white' : '#b2b2b2'
+                        }}
+                    >
+                        _Erase
+                    </button>
+                    <button onClick={handleDownload}>_Save</button>
+                </div>
+                </div>
             </div>
-            </div>
-        </div>
-
-    );
+    
+        );
+    }
 }
 
 export default DrawingApp;
