@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/ohms/static/css/main.ab17220a.css",
+    "main.js": "/ohms/static/js/main.de8ab1bb.js",
+    "static/js/787.36e4cf01.chunk.js": "/ohms/static/js/787.36e4cf01.chunk.js",
+    "index.html": "/ohms/index.html",
+    "main.ab17220a.css.map": "/ohms/static/css/main.ab17220a.css.map",
+    "main.de8ab1bb.js.map": "/ohms/static/js/main.de8ab1bb.js.map",
+    "787.36e4cf01.chunk.js.map": "/ohms/static/js/787.36e4cf01.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.ab17220a.css",
+    "static/js/main.de8ab1bb.js"
+  ]
+}
